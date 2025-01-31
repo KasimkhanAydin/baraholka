@@ -1,0 +1,41 @@
+services:
+    app:
+        container_name: baraholka_php
+        build: .
+        volumes:
+            - ./:/var/www/html
+        ports:
+            - "8080:80"
+        depends_on:
+            - db
+        # Override the default command:
+        command: >
+            /bin/sh -c "php artisan migrate:fresh --seed && apache2-foreground"
+    db:
+        container_name: baraholka_mariadb
+        image: mariadb:10.5
+        environment:
+            - MARIADB_ROOT_PASSWORD=secret
+            - MARIADB_DATABASE=baraholka
+            - MARIADB_USER=aidyn
+            - MARIADB_PASSWORD=m88h1x_L6
+        ports:
+            - "3306:3306"
+        volumes:
+            - db_data:/var/lib/mysql
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: baraholka_phpmyadmin
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_USER: root
+            PMA_PASSWORD: secret
+        ports:
+            - "8081:80"
+        depends_on:
+            - db
+
+volumes:
+    db_data:
