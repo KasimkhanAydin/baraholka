@@ -17,3 +17,6 @@ Copycurl -X DELETE http://localhost:8080/api/orders/1
 
 Инструкция для заупска
 docker-compose up --build -d
+потом сайт не сразу откроется коампузер может долго устанавливать зависимости минут десять 
+docker-compose logs -f app     этой командой можно смотреть или есть есть докер десктор в логе baraholka_php
+
