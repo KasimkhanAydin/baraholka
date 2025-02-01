@@ -9,6 +9,13 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && docker-php-ext-install pdo_mysql mbstring zip
 
+# Get Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Set memory limit for PHP to avoid issues during Composer installation
+RUN echo "memory_limit=-1" >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
+
 # Enable Apache mod_rewrite (important for Laravel routes)
 RUN a2enmod rewrite
 
@@ -17,7 +24,6 @@ WORKDIR /var/www/html
 
 # Copy the entire Laravel project into the container
 COPY . /var/www/html
-
 
 # Change ownership to www-data (Apache user) so it can read/write
 RUN chown -R www-data:www-data /var/www/html
