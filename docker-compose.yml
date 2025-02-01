@@ -4,13 +4,21 @@ services:
         build: .
         volumes:
             - ./:/var/www/html
+            
         ports:
             - "8080:80"
         depends_on:
             - db
+        environment:
+            - COMPOSER_PROCESS_TIMEOUT=2000
+            - APP_ENV=local
+            - APP_DEBUG=true
         # Override the default command:
         command: >
-            /bin/sh -c "php artisan migrate:fresh --seed && apache2-foreground"
+            /bin/sh -c "
+            composer install &&
+            php artisan migrate:fresh --seed &&
+            apache2-foreground"
     db:
         container_name: baraholka_mariadb
         image: mariadb:10.5
